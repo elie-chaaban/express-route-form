@@ -8,5 +8,6 @@ export default defineConfig({
   base: "./", // Or '/your-subdirectory-name/' if applicable
   build: {
     target: "esnext", // Good for modern browsers
+    outDir: "dist"
   },
 });
