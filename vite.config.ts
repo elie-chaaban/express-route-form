@@ -7,7 +7,6 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   base: "./", // Or '/your-subdirectory-name/' if applicable
   build: {
-    target: "esnext", // Good for modern browsers
-    outDir: "dist"
+    outDir: "dist",
   },
 });
