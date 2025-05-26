@@ -6,6 +6,6 @@ export default defineConfig({
   plugins: [react()],
   base: "./", // Or '/your-subdirectory-name/' if applicable
   build: {
-    outDir: "dist",
+    target: "esnext", // Good for modern browsers
   },
 });
