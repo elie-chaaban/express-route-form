@@ -7,7 +7,7 @@ const msalConfig = {
     clientId: "dabb4bc3-e7cf-4bbd-8162-6b326e335d9d",
     authority:
       "https://login.microsoftonline.com/7e3b2087-fa1d-486e-91b2-393c709765b1",
-    redirectUri: window.location.origin,
+    redirectUri: `https://nice-rock-042e4ab00.6.azurestaticapps.net/`,
   },
 };
 
