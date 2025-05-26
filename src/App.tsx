@@ -10,11 +10,14 @@ const msalConfig = {
     redirectUri: window.location.origin,
   },
 };
+const FUNCTION_URL =
+  "https://express-route-form-email.azurewebsites.net/api/express-route-form-email";
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [status, setStatus] = useState("");
   const [form, setForm] = useState({
     company: "",
     location: "",
@@ -23,6 +26,46 @@ export default function App() {
     customBandwidth: "",
     azureRegion: "",
   });
+  const submitForm = async () => {
+    setStatus("Sending...");
+    try {
+      const response = await fetch(FUNCTION_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          //@ts-ignore
+          name: user?.name,
+          //@ts-ignore
+          email: user?.username, // This is usually the email in MSAL
+          message: `
+            Company: ${form.company}
+            Location: ${form.location}
+            Geolocation: ${form.geo}
+            Bandwidth: ${form.customBandwidth || form.bandwidth} Mb
+            Azure Region: ${form.azureRegion}
+          `,
+        }),
+      });
+
+      const text = await response.text();
+      if (response.ok) {
+        setStatus("✅ Email sent successfully!");
+        setForm({
+          company: "",
+          location: "",
+          geo: "",
+          bandwidth: 50,
+          customBandwidth: "",
+          azureRegion: "",
+        });
+      } else {
+        setStatus(`❌ Failed: ${text}`);
+      }
+    } catch (err) {
+      console.error(err);
+      //@ts-ignore
+      setStatus(`❌ Error: ${err.message}`);
+    }
+  };
 
   useEffect(() => {
     const initAuth = async () => {
@@ -176,10 +219,15 @@ export default function App() {
 
           <button
             className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 mt-4"
-            onClick={() => console.log(form)}
+            onClick={submitForm}
           >
             Submit Request
           </button>
+          {status && (
+            <div className="mt-4 text-center text-sm text-gray-700">
+              {status}
+            </div>
+          )}
         </div>
       </div>
     </div>
